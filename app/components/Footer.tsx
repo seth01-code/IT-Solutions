@@ -5,9 +5,9 @@ import {
   FaLinkedin,
   FaGithub,
   FaTools,
-  FaShieldAlt,
-  FaCloud,
 } from "react-icons/fa";
+
+import type { IconType } from "react-icons";
 
 const footerLinks = {
   IT_Services: [
@@ -33,6 +33,7 @@ export default function Footer() {
       <div className="max-w-[1200px] mx-auto px-8">
         {/* TOP GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+
           {/* BRAND */}
           <div>
             <Link
@@ -122,6 +123,7 @@ export default function Footer() {
               ))}
             </ul>
           </div>
+
         </div>
 
         {/* BOTTOM BAR */}
@@ -141,7 +143,7 @@ export default function Footer() {
 }
 
 /* SOCIAL ICON COMPONENT */
-function SocialIcon({ icon: Icon }) {
+function SocialIcon({ icon: Icon }: { icon: IconType }) {
   return (
     <button className="w-[38px] h-[38px] rounded-[10px] border border-white/[0.07] flex items-center justify-center text-[#8888aa] hover:text-[#9d7fff] hover:border-[#9d7fff] transition">
       <Icon />
