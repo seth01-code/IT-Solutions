@@ -58,10 +58,15 @@ export default function Contact() {
     message: "",
   });
 
-  const handleChange = (e) =>
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     alert("Message sent! We’ll respond within 24 hours.");
   };
