@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
-import Preloader from "./components/Preloader";
+import Preloader from "./Preloader";
 import { Toaster } from "sonner";
 
 const syne = Syne({
