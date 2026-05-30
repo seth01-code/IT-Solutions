@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaWindows,
   FaShieldAlt,
@@ -12,6 +12,21 @@ import {
 
 export default function Portfolio() {
   const [activeProject, setActiveProject] = useState<any>(null);
+
+  // Close modal on ESC key
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActiveProject(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    document.body.style.overflow = activeProject ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [activeProject]);
 
   const projects = [
     {
@@ -107,8 +122,9 @@ export default function Portfolio() {
   ];
 
   return (
-    <section id="portfolio" className="py-[120px] bg-[var(--bg)]">
-      <div className="max-w-[1200px] mx-auto px-8">
+    <section id="portfolio" className="py-16 sm:py-20 lg:py-[120px] bg-[var(--bg)]">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* HEADER */}
         <div className="text-center mb-5">
           <span className="inline-flex items-center gap-1.5 bg-[var(--card2)] border border-[var(--border)] text-[var(--muted)] text-[13px] font-medium px-4 py-1.5 rounded-full">
@@ -116,36 +132,35 @@ export default function Portfolio() {
           </span>
         </div>
 
-        <h2 className="font-syne text-[clamp(32px,5vw,52px)] font-black text-center leading-tight mb-5 text-[var(--text)]">
+        <h2 className="font-syne text-[clamp(28px,5vw,52px)] font-black text-center leading-tight mb-5 text-[var(--text)]">
           Real Work <span className="gradient-text">We Deliver</span>
         </h2>
 
-        <p className="text-center text-[var(--muted)] max-w-[650px] mx-auto text-[17px] leading-[1.7] mb-16">
+        <p className="text-center text-[var(--muted)] max-w-[650px] mx-auto text-sm sm:text-[17px] leading-[1.7] mb-10 sm:mb-16">
           Practical IT solutions delivered to businesses — from system repairs
           and cybersecurity to networking and full infrastructure support.
         </p>
 
         {/* GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {projects.map((p) => {
             const Icon = p.icon;
-
             return (
               <div
                 key={p.title}
                 className="bg-[var(--card)] border border-[var(--border)] rounded-2xl overflow-hidden hover:-translate-y-1 transition-all cursor-pointer"
+                onClick={() => setActiveProject(p)}
               >
                 {/* TOP */}
-                <div className="h-[160px] flex items-center justify-center bg-gradient-to-br from-[var(--card2)] to-[var(--bg2)] relative">
+                <div className="h-[140px] sm:h-[160px] flex items-center justify-center bg-gradient-to-br from-[var(--card2)] to-[var(--bg2)] relative">
                   <span className="absolute top-3 left-3 text-xs text-[var(--muted)]">
                     {p.year}
                   </span>
-
-                  <Icon className="text-[40px]" style={{ color: p.color }} />
+                  <Icon className="text-[36px] sm:text-[40px]" style={{ color: p.color }} />
                 </div>
 
                 {/* BODY */}
-                <div className="p-6">
+                <div className="p-5 sm:p-6">
                   <div
                     className="text-[11px] font-bold tracking-[0.12em] uppercase mb-2"
                     style={{ color: p.color }}
@@ -153,7 +168,7 @@ export default function Portfolio() {
                     {p.category}
                   </div>
 
-                  <h3 className="font-bold text-[18px] mb-1.5 text-[var(--text)]">
+                  <h3 className="font-bold text-[16px] sm:text-[18px] mb-1.5 text-[var(--text)] leading-snug">
                     {p.title}
                   </h3>
 
@@ -166,8 +181,8 @@ export default function Portfolio() {
                   </p>
 
                   <button
-                    onClick={() => setActiveProject(p)}
-                    className="text-[#9d7fff] text-sm cursor-pointer font-medium hover:underline"
+                    onClick={(e) => { e.stopPropagation(); setActiveProject(p); }}
+                    className="text-[#9d7fff] text-sm font-medium hover:underline"
                   >
                     View Case Study →
                   </button>
@@ -181,36 +196,33 @@ export default function Portfolio() {
       {/* MODAL */}
       {activeProject && (
         <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center p-6 z-50 animate-fadeIn"
+          className="fixed inset-0 bg-black/80 flex items-end sm:items-center justify-center p-0 sm:p-6 z-50 animate-fadeIn"
           onClick={() => setActiveProject(null)}
         >
           <div
-            className="bg-[var(--card)] max-w-[850px] w-full rounded-2xl overflow-hidden border border-[var(--border)] shadow-2xl animate-scaleIn"
+            className="bg-[var(--card)] w-full sm:max-w-[850px] rounded-t-3xl sm:rounded-2xl overflow-hidden border border-[var(--border)] shadow-2xl animate-scaleIn max-h-[92svh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* MAC TOP BAR */}
-            <div className="flex items-center gap-2 px-4 py-3 bg-[var(--bg2)]">
+            <div className="flex items-center gap-2 px-4 py-3 bg-[var(--bg2)] shrink-0">
               <span className="w-3 h-3 rounded-full bg-red-500"></span>
               <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
               <span className="w-3 h-3 rounded-full bg-green-500"></span>
-
-              <span className="ml-3 text-xs text-[var(--muted)]">
-                Case Study Viewer
-              </span>
+              <span className="ml-3 text-xs text-[var(--muted)]">Case Study Viewer</span>
             </div>
 
-            {/* BODY */}
-            <div className="p-6 md:p-8 space-y-6">
+            {/* SCROLLABLE BODY */}
+            <div className="p-5 sm:p-8 space-y-5 sm:space-y-6 overflow-y-auto">
+
               {/* HEADER */}
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                <div className="flex items-center gap-3 sm:gap-4">
                   <activeProject.icon
-                    className="text-[38px]"
+                    className="text-[32px] sm:text-[38px] shrink-0"
                     style={{ color: activeProject.color }}
                   />
-
                   <div>
-                    <h3 className="text-2xl font-bold text-[var(--text)]">
+                    <h3 className="text-lg sm:text-2xl font-bold text-[var(--text)] leading-snug">
                       {activeProject.title}
                     </h3>
                     <p className="text-[var(--muted)] text-sm mt-1">
@@ -220,7 +232,7 @@ export default function Portfolio() {
                 </div>
 
                 <span
-                  className="text-xs px-3 py-1 rounded-full border border-[var(--border)]"
+                  className="self-start text-xs px-3 py-1 rounded-full border border-[var(--border)] whitespace-nowrap"
                   style={{ color: activeProject.color }}
                 >
                   {activeProject.category}
@@ -235,27 +247,17 @@ export default function Portfolio() {
               </div>
 
               {/* IMPACT */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 text-center">
-                  <p className="text-[#9d7fff] font-bold text-sm">Impact</p>
-                  <p className="text-xs text-[var(--muted)] mt-1">
-                    System Stabilized
-                  </p>
-                </div>
-
-                <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 text-center">
-                  <p className="text-[#00d4ff] font-bold text-sm">Efficiency</p>
-                  <p className="text-xs text-[var(--muted)] mt-1">
-                    +40% Improvement
-                  </p>
-                </div>
-
-                <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 text-center">
-                  <p className="text-[#00c896] font-bold text-sm">Downtime</p>
-                  <p className="text-xs text-[var(--muted)] mt-1">
-                    Reduced Significantly
-                  </p>
-                </div>
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                {[
+                  { label: "Impact",      sub: "System Stabilized",    color: "#9d7fff" },
+                  { label: "Efficiency",  sub: "+40% Improvement",     color: "#00d4ff" },
+                  { label: "Downtime",    sub: "Reduced Significantly", color: "#00c896" },
+                ].map((stat) => (
+                  <div key={stat.label} className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 text-center">
+                    <p className="font-bold text-xs sm:text-sm" style={{ color: stat.color }}>{stat.label}</p>
+                    <p className="text-[11px] sm:text-xs text-[var(--muted)] mt-1">{stat.sub}</p>
+                  </div>
+                ))}
               </div>
 
               {/* TASKS */}
@@ -263,14 +265,13 @@ export default function Portfolio() {
                 <h4 className="text-sm font-semibold text-[var(--text)] mb-3">
                   Work Completed
                 </h4>
-
                 <div className="space-y-2">
                   {activeProject.details.map((d: string, i: number) => (
                     <div
                       key={i}
                       className="flex items-start gap-2 text-sm text-[var(--muted)]"
                     >
-                      <span className="text-[#9d7fff] mt-0.5">•</span>
+                      <span className="text-[#9d7fff] mt-0.5 shrink-0">•</span>
                       <span>{d}</span>
                     </div>
                   ))}
@@ -278,18 +279,18 @@ export default function Portfolio() {
               </div>
 
               {/* FOOTER */}
-              <div className="flex justify-between items-center pt-4 border-t border-[var(--border)]">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 pt-4 border-t border-[var(--border)]">
                 <span className="text-xs text-[var(--muted)]">
-                  Click outside or press ESC to close
+                  Tap outside or press ESC to close
                 </span>
-
                 <button
                   onClick={() => setActiveProject(null)}
-                  className="text-sm text-[#9d7fff] hover:underline"
+                  className="text-sm text-[#9d7fff] hover:underline self-start sm:self-auto"
                 >
                   Close Preview
                 </button>
               </div>
+
             </div>
           </div>
         </div>

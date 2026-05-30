@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaHeadset,
   FaHeartbeat,
@@ -146,16 +146,34 @@ const services = [
 export default function Services() {
   const [activeService, setActiveService] = useState<any>(null);
 
+  // ESC to close modal
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActiveService(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Lock body scroll when modal open
+  useEffect(() => {
+    document.body.style.overflow = activeService ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [activeService]);
+
   return (
-    <section className="py-[120px] bg-[var(--bg)] text-[var(--text)] relative transition-colors duration-300">
-      <div className="max-w-[1200px] mx-auto px-8">
+    <section
+      id="services"
+      className="py-16 sm:py-20 lg:py-[120px] bg-[var(--bg)] text-[var(--text)] relative transition-colors duration-300"
+    >
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* HEADER */}
-        <div className="text-center mb-14">
-          <h2 className="text-[clamp(32px,5vw,52px)] font-black mb-4">
+        <div className="text-center mb-10 sm:mb-14">
+          <h2 className="text-[clamp(28px,5vw,52px)] font-black mb-4">
             What We <span className="gradient-text">Offer</span>
           </h2>
-
-          <p className="text-[var(--muted)] max-w-[750px] mx-auto text-[16px] leading-[1.7]">
+          <p className="text-[var(--muted)] max-w-[750px] mx-auto text-sm sm:text-[16px] leading-[1.7]">
             We provide professional Windows IT support services designed for
             individuals and businesses. From troubleshooting and maintenance to
             cybersecurity and system management, we ensure your technology works
@@ -164,42 +182,38 @@ export default function Services() {
         </div>
 
         {/* PROCESS STRIP */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16 text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-10 sm:mb-16 text-center">
           {[
-            {
-              t: "1. Diagnose",
-              d: "We identify the root cause of your IT issue",
-            },
-            { t: "2. Resolve", d: "We fix, optimize, or secure your system" },
+            { t: "1. Diagnose", d: "We identify the root cause of your IT issue" },
+            { t: "2. Resolve",  d: "We fix, optimize, or secure your system" },
             { t: "3. Maintain", d: "We ensure long-term system stability" },
           ].map((p) => (
             <div
               key={p.t}
-              className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 transition-colors"
+              className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 sm:p-6 transition-colors"
             >
-              <h3 className="text-[var(--text)] font-bold mb-2">{p.t}</h3>
+              <h3 className="text-[var(--text)] font-bold mb-2 text-sm sm:text-base">{p.t}</h3>
               <p className="text-[var(--muted)] text-sm">{p.d}</p>
             </div>
           ))}
         </div>
 
         {/* SERVICES GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {services.map((svc) => {
             const Icon = svc.icon;
-
             return (
               <div
                 key={svc.title}
-                className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-7 hover:-translate-y-1 transition-all duration-300"
+                className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 sm:p-7 hover:-translate-y-1 transition-all duration-300"
               >
                 <div
-                  className={`w-14 h-14 rounded-xl bg-gradient-to-br ${svc.gradient} flex items-center justify-center text-white text-2xl mb-5`}
+                  className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${svc.gradient} flex items-center justify-center text-white text-xl sm:text-2xl mb-4 sm:mb-5`}
                 >
                   <Icon />
                 </div>
 
-                <h3 className="font-bold text-[17px] mb-2 text-[var(--text)]">
+                <h3 className="font-bold text-[15px] sm:text-[17px] mb-2 text-[var(--text)] leading-snug">
                   {svc.title}
                 </h3>
 
@@ -209,7 +223,7 @@ export default function Services() {
 
                 <button
                   onClick={() => setActiveService(svc)}
-                  className="text-[var(--purple-light)] text-sm font-medium cursor-pointer hover:underline"
+                  className="text-[var(--purple-light)] text-sm font-medium hover:underline"
                 >
                   View Details →
                 </button>
@@ -221,32 +235,45 @@ export default function Services() {
 
       {/* MODAL */}
       {activeService && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-6 z-50">
-          <div className="bg-[var(--bg2)] border border-[var(--border)] max-w-[520px] w-full rounded-2xl p-6 relative text-[var(--text)]">
+        <div
+          className="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center p-0 sm:p-6 z-50"
+          onClick={() => setActiveService(null)}
+        >
+          <div
+            className="bg-[var(--bg2)] border border-[var(--border)] w-full sm:max-w-[520px] rounded-t-3xl sm:rounded-2xl p-6 relative text-[var(--text)] max-h-[90svh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
             <button
               onClick={() => setActiveService(null)}
-              className="absolute top-3 right-4 text-[var(--muted)] text-xl hover:text-[var(--text)]"
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] transition text-sm"
+              aria-label="Close"
             >
               ✕
             </button>
 
-            <div className="flex items-center gap-3 mb-3">
+            {/* Icon + Title */}
+            <div className="flex items-start gap-3 mb-4 pr-10">
               <div
-                className={`w-12 h-12 rounded-xl bg-gradient-to-br ${activeService.gradient} flex items-center justify-center text-white`}
+                className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${activeService.gradient} flex items-center justify-center text-white shrink-0`}
               >
                 <activeService.icon />
               </div>
-
-              <h3 className="text-xl font-bold">{activeService.title}</h3>
+              <h3 className="text-lg sm:text-xl font-bold leading-snug pt-1">
+                {activeService.title}
+              </h3>
             </div>
 
             <p className="text-[var(--muted)] text-sm mb-4 leading-[1.6]">
               {activeService.description}
             </p>
 
-            <ul className="space-y-2 text-sm text-[var(--text)]/80">
+            <ul className="space-y-2.5 text-sm text-[var(--text)]/80">
               {activeService.points.map((p: string, i: number) => (
-                <li key={i}>• {p}</li>
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-[var(--purple-light)] mt-0.5 shrink-0">•</span>
+                  <span>{p}</span>
+                </li>
               ))}
             </ul>
           </div>

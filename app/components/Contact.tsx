@@ -12,6 +12,7 @@ import {
   FaGithub,
   FaTwitter,
 } from "react-icons/fa";
+import {toast} from 'sonner'
 
 const contactInfo = [
   {
@@ -68,15 +69,18 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert("Message sent! We’ll respond within 24 hours.");
+    toast.success("Message sent successfully!", {
+    description: "We'll respond within 24 hours.",
+  });
   };
 
   const inputClass =
     "bg-[var(--bg)] border border-[var(--border)] rounded-[10px] px-3.5 py-3 text-[var(--text)] text-sm outline-none focus:border-[#7c5cfc] transition w-full";
 
   return (
-    <section id="contact" className="py-[120px] bg-[var(--bg)]">
-      <div className="max-w-[1200px] mx-auto px-8">
+    <section id="contact" className="py-16 sm:py-20 lg:py-[120px] bg-[var(--bg)]">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* HEADER */}
         <div className="text-center mb-5">
           <span className="inline-flex items-center gap-1.5 bg-[#7c5cfc]/15 border border-[#7c5cfc]/35 text-[#9d7fff] text-[13px] font-medium px-4 py-1.5 rounded-full">
@@ -84,30 +88,32 @@ export default function Contact() {
           </span>
         </div>
 
-        <h2 className="font-syne text-[clamp(32px,5vw,52px)] font-black text-center leading-tight mb-5">
+        <h2 className="font-syne text-[clamp(28px,5vw,52px)] font-black text-center leading-tight mb-5">
           Get Expert <span className="gradient-text">Windows Support</span>
         </h2>
 
-        <p className="text-center text-[var(--muted)] max-w-[650px] mx-auto text-[17px] leading-[1.7] mb-10">
+        <p className="text-center text-[var(--muted)] max-w-[650px] mx-auto text-sm sm:text-[17px] leading-[1.7] mb-8 sm:mb-10">
           We provide fast remote and on-site IT support for Windows systems,
           business networks, cybersecurity, and system maintenance.
         </p>
 
         {/* SLA */}
-        <div className="text-center mb-14">
+        <div className="text-center mb-10 sm:mb-14">
           <span className="inline-flex items-center gap-2 bg-[var(--card)] border border-[var(--border)] px-4 py-2 rounded-full text-sm text-[var(--muted)]">
             ⚡ Average Response Time:{" "}
             <strong className="text-[#9d7fff]">Under 2 Hours</strong>
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+
           {/* FORM */}
           <form
             onSubmit={handleSubmit}
-            className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-8"
+            className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 sm:p-8"
           >
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            {/* Name + Email — stack on mobile, side by side on sm+ */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <input
                 name="name"
                 placeholder="Full Name"
@@ -122,14 +128,14 @@ export default function Contact() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            {/* Phone + Service — stack on mobile, side by side on sm+ */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <input
                 name="phone"
                 placeholder="Phone / WhatsApp"
                 className={inputClass}
                 onChange={handleChange}
               />
-
               <select
                 name="service"
                 className={inputClass}
@@ -162,21 +168,19 @@ export default function Contact() {
           <div className="flex flex-col gap-4">
             {contactInfo.map((c) => {
               const Icon = c.icon;
-
               return (
                 <div
                   key={c.label}
                   className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 flex items-center gap-4"
                 >
-                  <div className="w-11 h-11 rounded-xl bg-[#7c5cfc]/15 flex items-center justify-center text-[#9d7fff]">
+                  <div className="w-11 h-11 rounded-xl bg-[#7c5cfc]/15 flex items-center justify-center text-[#9d7fff] shrink-0">
                     <Icon />
                   </div>
-
-                  <div>
+                  <div className="min-w-0">
                     <div className="text-xs text-[var(--muted)] uppercase tracking-wider">
                       {c.label}
                     </div>
-                    <div className="text-[var(--text)] font-medium text-sm">
+                    <div className="text-[var(--text)] font-medium text-sm truncate">
                       {c.value}
                     </div>
                   </div>
@@ -185,10 +189,10 @@ export default function Contact() {
             })}
 
             {/* SUPPORT CARD */}
-            <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6">
+            <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 sm:p-6">
               <div className="flex items-center gap-3 mb-3">
-                <FaLaptop className="text-[#9d7fff]" />
-                <h4 className="font-bold text-[var(--text)]">
+                <FaLaptop className="text-[#9d7fff] shrink-0" />
+                <h4 className="font-bold text-[var(--text)] text-sm sm:text-base">
                   Windows IT Support Center
                 </h4>
               </div>
@@ -206,11 +210,10 @@ export default function Contact() {
                 { icon: FaTwitter, label: "Twitter" },
               ].map((s) => {
                 const Icon = s.icon;
-
                 return (
                   <button
                     key={s.label}
-                    className="flex items-center gap-2 border border-[var(--border)] px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[#9d7fff] hover:border-[#9d7fff]"
+                    className="flex items-center gap-2 border border-[var(--border)] px-4 py-2 rounded-full text-sm text-[var(--muted)] hover:text-[#9d7fff] hover:border-[#9d7fff] transition"
                   >
                     <Icon />
                     {s.label}
@@ -219,6 +222,7 @@ export default function Contact() {
               })}
             </div>
           </div>
+
         </div>
       </div>
     </section>
